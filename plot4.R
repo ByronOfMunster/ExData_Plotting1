@@ -6,6 +6,7 @@
 #-------------------------------------------------------------------------------
 # Step 1:  Download zip file to working direcory IF IT DOES NOT ALREADY EXIST
 #-------------------------------------------------------------------------------
+
 if(!file.exists("exdata-data-household_power_consumption.zip")) {
         print("downloading...")
         zipfile <- tempfile()
@@ -13,36 +14,45 @@ if(!file.exists("exdata-data-household_power_consumption.zip")) {
 } else {
         zipfile <- "exdata-data-household_power_consumption.zip" 
 }
+
 #-------------------------------------------------------------------------------
 # Step 2:  Read the file needed from the archive (i.e. does not explode it) and 
 #          load it into a data frame. 
 #-------------------------------------------------------------------------------
+
 hpc <- read.csv(unz(zipfile, "household_power_consumption.txt"), 
                 header=TRUE, 
                 sep =";", 
                 na.strings="?",
                 stringsAsFactors=FALSE)
+                
 #-------------------------------------------------------------------------------
 # Step 3: Condition Data for graphing
 #-------------------------------------------------------------------------------
 # (a) Subset to data so that it only contains observations from 2/1/2007 and
 #     2/2/2007.
 #-------------------------------------------------------------------------------
+
 hpc <- hpc[which(hpc$Date == "1/2/2007" | hpc$Date == "2/2/2007"),]
+
 #-------------------------------------------------------------------------------
 # (b) Add a combined date/time variable to dataframe and coherce it to POSIXct
 #-------------------------------------------------------------------------------
+
 hpc$DateTime <- paste(hpc$Date, hpc$Time)
 hpc$DateTime <- as.POSIXct(hpc$DateTime, format="%d/%m/%Y %H:%M:%S")
+
 #-------------------------------------------------------------------------------
 # (c) Convert remaining non date and time columns to numeric.                  
 #-------------------------------------------------------------------------------
+
 hpc$Global_active_power <- as.numeric(hpc$Global_active_power)
 hpc$Global_reactive_power <- as.numeric(hpc$Global_reactive_power)
 hpc$Voltage <- as.numeric(hpc$Voltage)
 hpc$Global_intensity <- as.numeric(hpc$Global_intensity)
 hpc$Sub_metering_1 <- as.numeric(hpc$Sub_metering_1)
 hpc$Sub_metering_2 <- as.numeric(hpc$Sub_metering_2)
+
 #-------------------------------------------------------------------------------
 # Step 4: Plot graph 4 which is a 4 graph multi-plot to PNG device
 #         Note:  I made it look "exactly" like the sample output in assignment
@@ -52,22 +62,27 @@ hpc$Sub_metering_2 <- as.numeric(hpc$Sub_metering_2)
 #               * No box around legend on lower left graph
 #               * Ugly y=axis label with underscores on lower right graph 
 #-------------------------------------------------------------------------------
+
 png(filename="plot4.png",
     width=480,
     height=480)
 
 par(mfcol = c(2,2))
+
 #-------------------------------------------------------------------------------
 # Plot Upper Left Corner - Sames as Plot 2
 #-------------------------------------------------------------------------------
+
 plot(hpc$DateTime, 
      hpc$Global_active_power, 
      type="l",
      ylab="Global Active Power",
      xlab="")
+     
 #-------------------------------------------------------------------------------
-# Lower Left Corner - Same as Plot 3 with exception of no border on legend.
+# Plot Lower Left Corner - Same as Plot 3 with exception of no border on legend.
 #-------------------------------------------------------------------------------
+
 plot(hpc$DateTime, 
      hpc$Sub_metering_1,
      type="l",
@@ -91,16 +106,19 @@ legend("topright",
        lty=1)
 
 #-------------------------------------------------------------------------------
-# Upper Right Corner - Line graph for Voltage
+# Plot Upper Right Corner - Line graph for Voltage
 #-------------------------------------------------------------------------------
+
 plot(hpc$DateTime, 
      hpc$Voltage, 
      type="l",
      ylab="Voltage",
      xlab="datetime")
+     
 #-------------------------------------------------------------------------------
-# Lower Right Corner - Line graph for Global Reactive Power
+# Plot Lower Right Corner - Line graph for Global Reactive Power
 #-------------------------------------------------------------------------------
+
 plot(hpc$DateTime, 
      hpc$Global_reactive_power, 
      type="l",
