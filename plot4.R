@@ -52,6 +52,7 @@ hpc$Voltage <- as.numeric(hpc$Voltage)
 hpc$Global_intensity <- as.numeric(hpc$Global_intensity)
 hpc$Sub_metering_1 <- as.numeric(hpc$Sub_metering_1)
 hpc$Sub_metering_2 <- as.numeric(hpc$Sub_metering_2)
+hpc$Sub_metering_3 <- as.numeric(hpc$Sub_metering-3)
 
 #-------------------------------------------------------------------------------
 # Step 4: Plot graph 4 which is a 4 graph multi-plot to PNG device
